@@ -188,12 +188,44 @@ Instruction_Memory Instruction_Memory(
     .instr_o    (inst_IF)
 );
 
-Data_Memory Data_Memory(
+wire[31:0] mem_addr_o,mem_addr_i;
+wire[255:0] mem_data_o,mem_data_i;
+wire mem_enable_o,mem_ack_i,mem_write_o;
+
+Data_Memory Data_Memory
+(
 	.clk_i(clk_i),
-	.addr_i(alu_result_MEM),
-	.data_i(rs2_data_MEM),
-	.mem_write_i((valid_MEM&&opcode_MEM==3'b010)? 1'b1:1'b0),
-	.data_o(memory_data_MEM)
+	.rst_i(rst_i),
+	.addr_i(mem_addr_o),
+	.data_i(mem_data_o),
+	.enable_i(mem_enable_o),
+	.write_i(mem_write_o),
+	.ack_o(mem_ack_i),
+	.data_o(mem_data_i)
+);
+
+//data cache
+dcache_top dcache
+(
+    // System clock, reset and stall
+	.clk_i(clk_i), 
+	.rst_i(rst_i),
+	
+	// to Data Memory interface		
+	.mem_data_i(mem_data_i), 
+	.mem_ack_i(mem_ack_i), 	
+	.mem_data_o(mem_data_o), 
+	.mem_addr_o(mem_addr_o), 	
+	.mem_enable_o(mem_enable_o), 
+	.mem_write_o(mem_write_o), 
+	
+	// to CPU interface	
+	.p1_data_i(rs2_data_MEM), 
+	.p1_addr_i(alu_result_MEM), 	
+	.p1_MemRead_i(1'b1), 
+	.p1_MemWrite_i((valid_MEM&&opcode_MEM==3'b010)? 1'b1:1'b0), 
+	.p1_data_o(memory_data_MEM), 
+	.p1_stall_o(all_stall_signal)
 );
 
 MUX32 RegWriteSrc_Mux(
