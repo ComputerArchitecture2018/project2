@@ -36,6 +36,12 @@ initial begin
         CPU.Registers.register[i] = 32'b0;
     end
 
+    // initialize cache memory  (1KB)
+    for(i=0; i<32; i=i+1) begin
+        CPU.dcache.dcache_tag_sram.memory[i] = 24'b0;
+        CPU.dcache.dcache_data_sram.memory[i] = 256'b0;
+    end
+
     CPU.Data_Memory.memory[0] = 5;
     for(i=1; i<256; i=i+1) begin
         CPU.Data_Memory.memory[i] = 32'b0;
