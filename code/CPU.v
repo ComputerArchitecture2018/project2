@@ -205,7 +205,7 @@ Data_Memory Data_Memory
 );
 
 wire foo;
-assign all_stall_signal=foo===1'b1;
+assign all_stall_signal=foo;
 
 //data cache
 dcache_top dcache
