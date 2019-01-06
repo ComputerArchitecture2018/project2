@@ -204,6 +204,9 @@ Data_Memory Data_Memory
 	.data_o(mem_data_i)
 );
 
+wire foo;
+assign foo=all_stall_signal===1'b1;
+
 //data cache
 dcache_top dcache
 (
@@ -225,7 +228,7 @@ dcache_top dcache
 	.p1_MemRead_i(1'b1), 
 	.p1_MemWrite_i((valid_MEM&&opcode_MEM==3'b010)? 1'b1:1'b0), 
 	.p1_data_o(memory_data_MEM), 
-	.p1_stall_o(all_stall_signal)
+	.p1_stall_o(foo)
 );
 
 MUX32 RegWriteSrc_Mux(
