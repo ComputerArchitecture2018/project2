@@ -1,14 +1,32 @@
 module CPU
 (
-    clk_i, 
-    rst_i,
-    start_i
+	clk_i,
+	rst_i,
+	start_i,
+   
+	mem_data_i, 
+	mem_ack_i, 	
+	mem_data_o, 
+	mem_addr_o, 	
+	mem_enable_o, 
+	mem_write_o
 );
 
-// Ports
-input               clk_i;
-input               rst_i;
-input               start_i;
+//input
+input clk_i;
+input rst_i;
+input start_i;
+
+//
+// to Data Memory interface		
+//
+input	[256-1:0]	mem_data_i; 
+input				mem_ack_i; 	
+output	[256-1:0]	mem_data_o; 
+output	[32-1:0]	mem_addr_o; 	
+output				mem_enable_o; 
+output				mem_write_o; 
+
 
 wire[31:0]inst_addr;
 wire[31:0]next_inst_addr;
@@ -185,22 +203,6 @@ MUX32 PC_Mux(
 Instruction_Memory Instruction_Memory(
     .addr_i     (inst_addr), 
     .instr_o    (inst_IF)
-);
-
-wire[31:0] mem_addr_o,mem_addr_i;
-wire[255:0] mem_data_o,mem_data_i;
-wire mem_enable_o,mem_ack_i,mem_write_o;
-
-Data_Memory Data_Memory
-(
-	.clk_i(clk_i),
-	.rst_i(rst_i),
-	.addr_i(mem_addr_o),
-	.data_i(mem_data_o),
-	.enable_i(mem_enable_o),
-	.write_i(mem_write_o),
-	.ack_o(mem_ack_i),
-	.data_o(mem_data_i)
 );
 
 wire foo;
