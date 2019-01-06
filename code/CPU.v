@@ -74,7 +74,7 @@ Buf_IF_ID Buffer_IF_ID(
 	.rst_i(rst_i),
 	.pc_i(inst_addr),
 	.inst_i(inst_IF),
-	.IF_stall_i(IF_stall_signal&&all_stall_signal),
+	.IF_stall_i(IF_stall_signal||all_stall_signal),
 	.IF_flush_i(IF_flush_signal),
 	.pc_o(pc_ID),
 	.inst_o(inst_ID)
