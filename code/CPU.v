@@ -40,6 +40,7 @@ wire pc_write;
 wire Hazard_Detect_Valid,Control_Valid;
 wire Control_IF_flush_signal,Hazard_IF_flush_signal;
 wire all_stall_signal;
+assign all_stall_signal=1'b0;
 
 assign valid_ID=Hazard_Detect_Valid&Control_Valid;
 assign pc_write=~IF_stall_signal&&~all_stall_signal;
