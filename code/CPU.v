@@ -165,11 +165,13 @@ Adder Add_PC(
 );
 
 
-PC PC(
-    .clk_i      (clk_i),
-    .rst_i      (rst_i),
-    .start_i    (start_i),
-	.pc_write_i(pc_write),
+PC PC
+(
+	.clk_i(clk_i),
+	.rst_i(rst_i),
+	.start_i(start_i),
+	.stall_i(1'b0),
+	.pcEnable_i(pc_write),
     .pc_i       (pc_input),
     .pc_o       (inst_addr)
 );

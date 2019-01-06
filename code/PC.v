@@ -1,34 +1,35 @@
 module PC
 (
-    clk_i,
+	clk_i,
     rst_i,
-    start_i,
-	pc_write_i,
-    pc_i,
-    pc_o
+	start_i,
+	stall_i,
+	pcEnable_i,
+	pc_i,
+	pc_o
 );
 
-// Ports
-input               clk_i;
-input               rst_i;
-input               start_i;
-input pc_write_i;
-input   [31:0]      pc_i;
-output  [31:0]      pc_o;
+// Interface
+input				   clk_i;
+input				   rst_i;
+input				   start_i;
+input				   stall_i;
+input          pcEnable_i;
+input	 [31:0]		pc_i;
+output	[31:0]		pc_o;
 
-// Wires & Registers
-reg     [31:0]      pc_o;
-
+// Signals
+reg		[31:0]		pc_o;
 
 always@(posedge clk_i or negedge rst_i) begin
     if(~rst_i) begin
         pc_o <= 32'b0;
     end
     else begin
-        if(start_i && pc_write_i)
+        if (!stall_i&&start_i&&pcEnable_i)
             pc_o <= pc_i;
-        else
-            pc_o <= pc_o;
+        else if (!stall_i&&!start_i)
+            pc_o <= 32'b0;
     end
 end
 
