@@ -181,7 +181,7 @@ always@(posedge clk_i or negedge rst_i) begin
 				else begin					//write allocate: write miss = read miss + write hit; read miss = read miss + read hit
 					mem_enable <= 1;
 					mem_write <= 0;
-					state <= STATE_READMISS;;
+					state <= STATE_READMISS;
 				end
 			end
 			STATE_READMISS: begin

@@ -57,7 +57,7 @@ initial begin
     Reset = 0;
     Start = 0;
     
-    #(`CYCLE_TIME/4) 
+    #(`CYCLE_TIME*3/4)
     Reset = 1;
     Start = 1;
         
