@@ -1,6 +1,7 @@
 module Buf_EX_MEM(
 	clk_i,
 	rst_i,
+	all_stall_i,
 	alu_result_i,
 	rs2_data_i,
 	rs2_i,
@@ -14,7 +15,7 @@ module Buf_EX_MEM(
 	Op_o,
 	valid_o,
 );
-input clk_i,rst_i;
+input clk_i,rst_i,all_stall_i;
 input[31:0]alu_result_i;
 output[31:0]alu_result_o;
 input[31:0]rs2_data_i;
@@ -41,12 +42,14 @@ assign rsd_o=rsd_reg_o;
 assign Op_o=Op_reg_o;
 assign valid_o=valid_reg_o;
 always @(posedge clk_i or negedge rst_i) begin
-	alu_result_reg_i<=rst_i==0?0:alu_result_i;
-	rs2_data_reg_i<=rst_i==0?0:rs2_data_i;
-	rs2_reg_i<=rst_i==0?0:rs2_i;
-	rsd_reg_i<=rst_i==0?0:rsd_i;
-	Op_reg_i<=rst_i==0?0:Op_i;
-	valid_reg_i<=rst_i==0?0:valid_i;
+	if(~all_stall_i)begin
+		alu_result_reg_i<=rst_i==0?0:alu_result_i;
+		rs2_data_reg_i<=rst_i==0?0:rs2_data_i;
+		rs2_reg_i<=rst_i==0?0:rs2_i;
+		rsd_reg_i<=rst_i==0?0:rsd_i;
+		Op_reg_i<=rst_i==0?0:Op_i;
+		valid_reg_i<=rst_i==0?0:valid_i;
+	end
 end
 always @(negedge clk_i or negedge rst_i) begin
 	alu_result_reg_o<=rst_i==0?0:alu_result_reg_i;

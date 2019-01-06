@@ -39,9 +39,10 @@ wire[31:0]register_input_WB;
 wire pc_write;
 wire Hazard_Detect_Valid,Control_Valid;
 wire Control_IF_flush_signal,Hazard_IF_flush_signal;
+wire all_stall_signal;
 
 assign valid_ID=Hazard_Detect_Valid&Control_Valid;
-assign pc_write=~IF_stall_signal;//IF_flush: stall
+assign pc_write=~IF_stall_signal&&~all_stall_signal;
 assign IF_flush_signal=Control_IF_flush_signal;
 assign IF_stall_signal=Hazard_IF_flush_signal;
 assign reg_src_WB=(opcode_WB==3'b011||opcode_WB==3'b001)? 1'b0:
@@ -72,7 +73,7 @@ Buf_IF_ID Buffer_IF_ID(
 	.rst_i(rst_i),
 	.pc_i(inst_addr),
 	.inst_i(inst_IF),
-	.IF_stall_i(IF_stall_signal),
+	.IF_stall_i(IF_stall_signal&&all_stall_signal),
 	.IF_flush_i(IF_flush_signal),
 	.pc_o(pc_ID),
 	.inst_o(inst_ID)
@@ -83,6 +84,7 @@ wire[31:0]rs1_data_raw_EX,rs2_data_raw_EX;
 Buf_ID_EX Buffer_ID_EX(
 	.clk_i(clk_i),
 	.rst_i(rst_i),
+	.all_stall_i(all_stall_signal),
 	.inst_i(inst_ID),
 	.rs1_data_i(rs1_data_ID),
 	.rs2_data_i(rs2_data_ID),
@@ -106,6 +108,7 @@ Buf_ID_EX Buffer_ID_EX(
 Buf_EX_MEM Buffer_EX_MEM(
 	.clk_i(clk_i),
 	.rst_i(rst_i),
+	.all_stall_i(all_stall_signal),
 	.alu_result_i(alu_result_EX),
 	.rs2_data_i(rs2_data_EX),
 	.rs2_i(rs2_EX),
@@ -123,6 +126,7 @@ Buf_EX_MEM Buffer_EX_MEM(
 Buf_MEM_WB Buffer_MEM_WB(
 	.clk_i(clk_i),
 	.rst_i(rst_i),
+	.all_stall_i(all_stall_signal),
 	.alu_result_i(alu_result_MEM),
 	.memory_data_i(memory_data_MEM),
 	.rsd_i(rsd_MEM),
